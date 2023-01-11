@@ -1,30 +1,28 @@
+import axios, { AxiosResponse } from "axios";
+import { Film, Films } from "../types/films.type";
+
 const BASE_URL = "https://swapi.dev/api";
-import axios from "axios";
 
-async function getItems(item: string) {
-  const query = `${BASE_URL}/${item}`;
-  try {
-    const response = await axios.get(query);
-    return response.data.results;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function getItem(item: string, index: string) {
-  const query = `${BASE_URL}/${item}/${index}`;
-  try {
-    const response = await axios.get(query);
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-}
+const swapiClient = axios.create({
+  baseURL: BASE_URL,
+});
 
 export async function getFilms() {
-  return await getItems("films");
+  try {
+    const response = await swapiClient.get<Films>("/films");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return `Error: ${error}`;
+  }
 }
 
 export async function getFilm(index: string) {
-  return await getItem("films", index);
+  try {
+    const response = await swapiClient.get<Films>(`/films/${index}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return `Error: ${error}`;
+  }
 }
