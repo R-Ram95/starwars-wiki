@@ -14,7 +14,3 @@ export interface Film {
   created: string;
   edited: string;
 }
-
-export interface Films {
-  films: [Film];
-}
