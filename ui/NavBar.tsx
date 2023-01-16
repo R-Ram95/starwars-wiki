@@ -1,43 +1,7 @@
 "use client";
-import { BsFilm, BsPeopleFill } from "react-icons/bs";
-import { BiPlanet, BiDna } from "react-icons/bi";
-import { FaSpaceShuttle } from "react-icons/fa";
-import { AiFillCar } from "react-icons/ai";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-
-const navItems = [
-  {
-    name: "Films",
-    slug: "films",
-    icon: BsFilm,
-  },
-  {
-    name: "People",
-    slug: "people",
-    icon: BsPeopleFill,
-  },
-  {
-    name: "Planets",
-    slug: "planets",
-    icon: BiPlanet,
-  },
-  {
-    name: "Species",
-    slug: "species",
-    icon: BiDna,
-  },
-  {
-    name: "Starships",
-    slug: "starships",
-    icon: FaSpaceShuttle,
-  },
-  {
-    name: "Vehicles",
-    slug: "vehicles",
-    icon: AiFillCar,
-  },
-];
+import { navItems } from "../lib/data";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -48,7 +12,7 @@ export function NavBar() {
     <div className="fixed top-0 z-10 flex w-full flex-col border-b border-blue-100 bg-dark-blue md:bottom-0 md:z-auto md:w-52 md:border-r md:border-blue-100">
       <div className="flex h-16 flex-shrink-0 items-center bg-yellow px-4">
         <Link className="flex flex-row space-x-5 items-center pt-5" href={"/"}>
-          <h1 className="font-extrabold font-mono text-transparent text-2xl bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-yellow-500 ">
+          <h1 className="font-extrabold font-mono text-transparent text-2xl text-gray-200">
             StarWars <br /> Wikipedia
           </h1>
         </Link>
