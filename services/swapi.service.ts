@@ -22,13 +22,13 @@ export async function getFilm(index: string) {
   }
 }
 
-export async function getFilms() {
+export async function getFilms(): Promise<Film[]> {
   try {
-    const response = await swapiClient.get<[Film]>("/films");
-    return response.data;
+    const response = await swapiClient.get("/films");
+    return response.data.results;
   } catch (error) {
     console.log(error);
-    return `Error: ${error}`;
+    return [];
   }
 }
 
