@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Film } from "../types/film.type";
-import { Person } from "../types/person.type";
+import { People, Person } from "../types/person.type";
 import { Planet } from "../types/planet.type";
 import { Species } from "../types/species.type";
 import { Starship } from "../types/starship.type";
@@ -42,9 +42,11 @@ export async function getPerson(index: string) {
   }
 }
 
-export async function getPeople() {
+export async function getPeople(pageNum?: string) {
   try {
-    const response = await swapiClient.get<[Person]>("/people");
+    const response = await swapiClient.get<People>(
+      pageNum ? `/people/${pageNum}` : "/people"
+    );
     return response.data;
   } catch (error) {
     console.log(error);

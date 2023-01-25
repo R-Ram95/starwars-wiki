@@ -8,11 +8,18 @@ export interface Person {
   mass: string;
   skin_color: string;
   homeworld: string;
-  film: [string];
+  films: [string];
   species: [string];
   starships: [string];
   vehicles: [string];
   url: string;
   created: string;
   edited: string;
+}
+
+export interface People {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Person[];
 }
