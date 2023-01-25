@@ -1,61 +1,34 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  getFilm,
-  getFilms,
-  getPerson,
-  getPlanet,
-  getSpecies,
-  getStarship,
-  getVehicle,
-} from "../../../services/swapi.service";
+import { getPerson } from "../../../services/swapi.service";
 import { Film } from "../../../types/film.type";
 import { Person } from "../../../types/person.type";
-import { Planet } from "../../../types/planet.type";
-import { Species } from "../../../types/species.type";
-import { Starship } from "../../../types/starship.type";
-import { Vehicle } from "../../../types/vehicle.types";
+import {
+  getRelatedFilms,
+  getRelatedHomeWorld,
+  getRelatedSpecies,
+  getRelatedStarship,
+  getRelatedVehicle,
+} from "../../utils/helpers";
 
 export default async function PersonDetails({ params }: any) {
   const person = (await getPerson(params.slug)) as Person;
 
-  const homeWorldIndex = person.homeworld.split("/")[5];
-  const homeWorld = (await getPlanet(homeWorldIndex)) as Planet;
+  const homeWorld = await getRelatedHomeWorld(person.homeworld);
 
-  const speciesIndex =
-    person.species.length > 0 ? person.species[0]?.split("/")[5] : undefined;
-  const species = speciesIndex
-    ? ((await getSpecies(speciesIndex)) as Species)
-    : ({ name: "Unknown" } as Species);
+  const species = await getRelatedSpecies(person.species);
 
-  const starshipIndex =
-    person.starships.length > 0 ? person.starships[0].split("/")[5] : undefined;
-  const starship = starshipIndex
-    ? ((await getStarship(starshipIndex)) as Starship)
-    : ({ name: "n/a" } as Starship);
+  const starship = await getRelatedStarship(person.starships);
 
-  const vehicleIndex =
-    person.vehicles.length > 0 ? person.vehicles[0].split("/")[5] : undefined;
-  const vehicle = vehicleIndex
-    ? ((await getVehicle(vehicleIndex)) as Vehicle)
-    : ({ name: "n/a" } as Vehicle);
+  const vehicle = await getRelatedVehicle(person.vehicles);
 
-  const films = await getFilms();
-
-  const characterFilms: Film[] = [];
-
-  person.films.forEach((film) => {
-    const filmIndex = film.split("/")[5];
-    characterFilms.push(
-      films.find((item) => item["episode_id"] === Number(filmIndex)) as Film
-    );
-  });
+  const films = await getRelatedFilms(person.films);
 
   return (
     <div className="bg-black/20 p-7 rounded-lg">
       <p className="text-3xl mb-5 text-amber-300">{person.name}</p>
       <div className="flex flex-row">
-        <div className="border border-black/40 rounded-sm">
+        <div className="rounded-md">
           <Image
             src={`/img/characters/${params.slug}.jpg`}
             alt=""
@@ -70,7 +43,7 @@ export default async function PersonDetails({ params }: any) {
               <>{species.name}</>
             ) : (
               <Link
-                href={`/species/${speciesIndex}`}
+                href={`/species/${species.id}`}
                 className={"text-blue-400 underline"}
               >
                 {species.name}
@@ -80,7 +53,7 @@ export default async function PersonDetails({ params }: any) {
           <div>
             <b className="text-amber-300">Home World: </b>
             <Link
-              href={`/planets/${homeWorldIndex}`}
+              href={`/planets/${homeWorld.id}`}
               className="text-blue-400 underline"
             >
               {homeWorld.name}
@@ -120,7 +93,7 @@ export default async function PersonDetails({ params }: any) {
               <>{starship.name}</>
             ) : (
               <Link
-                href={`/starships/${starshipIndex}`}
+                href={`/starships/${starship.id}`}
                 className="text-blue-400 underline"
               >
                 {starship.name}
@@ -133,7 +106,7 @@ export default async function PersonDetails({ params }: any) {
               <>{vehicle.name}</>
             ) : (
               <Link
-                href={`/vehicles/${vehicleIndex}`}
+                href={`/vehicles/${vehicle.id}`}
                 className="text-blue-400 underline"
               >
                 {vehicle.name}
@@ -142,7 +115,7 @@ export default async function PersonDetails({ params }: any) {
           </p>
           <div className="flex flex-col">
             <b className="text-amber-300">Films:</b>
-            {characterFilms.map((episode: Film, index: number) => (
+            {films.map((episode: Film, index: number) => (
               <Link
                 href={`films/${episode["episode_id"]}`}
                 key={index}
